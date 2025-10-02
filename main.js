@@ -112,13 +112,6 @@ $(function () {
     canvasWidth = canvas.width();
     canvasHeight = canvas.height();
 
-    draw();
-  }
-  function updateCanvasDimensions() {
-    canvas.attr({ height: $(window).height(), width: $(window).width() });
-    canvasWidth = canvas.width();
-    canvasHeight = canvas.height();
-
     recenterPoints();
     draw();
   }
@@ -312,7 +305,7 @@ $(function () {
     offCanvas.width = 800;
     offCanvas.height = 200;
 
-    offCtx.fillStyle = "#000";
+    offCtx.fillStyle = "#ffffff";
     offCtx.font = "bold 120px Arial";
     offCtx.fillText(text, 20, 120);
 
@@ -353,6 +346,7 @@ $(function () {
     }
     pointCollection.points = newPoints;
     recenterPoints();
+    draw();
   });
 
   init();
@@ -361,41 +355,4 @@ $(function () {
   setTimeout(function () {
     $("#reload-msg").fadeOut(300);
   }, 3000);
-  function generatePointsFromText(text) {
-    let offCanvas = document.createElement("canvas");
-    let offCtx = offCanvas.getContext("2d");
-    offCanvas.width = 800;
-    offCanvas.height = 200;
-
-    offCtx.fillStyle = "#000";
-    offCtx.font = "bold 120px Arial";
-    offCtx.fillText(text, 20, 120);
-
-    let imageData = offCtx.getImageData(
-      0,
-      0,
-      offCanvas.width,
-      offCanvas.height,
-    );
-    let points = [];
-
-    for (let y = 0; y < imageData.height; y += 6) {
-      for (let x = 0; x < imageData.width; x += 6) {
-        let i = (y * imageData.width + x) * 4;
-        if (imageData.data[i + 3] > 128) {
-          let colour = "#3498db";
-          points.push(new Point(x, y, 0.0, 3, colour));
-        }
-      }
-    }
-
-    for (let i = 0; i < points.length; i++) {
-      points[i].curPos.x += canvasWidth / 2 - 200;
-      points[i].curPos.y += canvasHeight / 2 - 100;
-      points[i].originalPos.x = points[i].curPos.x;
-      points[i].originalPos.y = points[i].curPos.y;
-    }
-
-    return points;
-  }
 });
