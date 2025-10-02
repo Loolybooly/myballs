@@ -348,7 +348,9 @@ $(function () {
     let text = $("#wordInput").val().trim();
     if (!text) return alert("Please type a word!");
     let newPoints = generatePointsFromText(text);
-    pointCollection = new PointCollection();
+    if (!pointCollection) {
+      pointCollection = new PointCollection();
+    }
     pointCollection.points = newPoints;
     recenterPoints();
   });
