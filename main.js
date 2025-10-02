@@ -321,7 +321,7 @@ $(function () {
       for (let x = 0; x < imageData.width; x += 6) {
         let i = (y * imageData.width + x) * 4;
         if (imageData.data[i + 3] > 128) {
-          let colour = "#3498db";
+          let colour = "#555555";
           points.push(new Point(x, y, 0.0, 3, colour));
         }
       }
