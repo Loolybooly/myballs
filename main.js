@@ -345,10 +345,12 @@ $(function () {
   }
 
   $("#applyText").on("click", function () {
-    let text = $("#wordInput").val();
+    let text = $("#wordInput").val().trim();
+    if (!text) return alert("Please type a word!");
     let newPoints = generatePointsFromText(text);
     pointCollection = new PointCollection();
     pointCollection.points = newPoints;
+    recenterPoints();
   });
 
   init();
