@@ -33,25 +33,5 @@
         <canvas id="c" width="1758" height="603"></canvas>
         <input id="wordInput" type="text" placeholder="Type a word" />
         <button id="applyText">Render</button>
-
-        <script type="text/javascript">
-            $(document).ready(function () {
-                $("#applyText").click(function () {
-                    const text = $("#wordInput").val().trim();
-                    if (!text) return alert("Please type a word!");
-
-                    const canvas = document.getElementById("c");
-                    const ctx = canvas.getContext("2d");
-
-                    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-                    ctx.font = "48px Arial";
-                    ctx.fillStyle = "white";
-                    ctx.textAlign = "center";
-                    ctx.textBaseline = "middle";
-                    ctx.fillText(text, canvas.width / 2, canvas.height / 2);
-                });
-            });
-        </script>
     </body>
 </html>
