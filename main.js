@@ -9,8 +9,8 @@ $(function () {
 
   function init() {
     canvas.attr({ height: $(window).height(), width: $(window).width() });
-    canvasWidth = canvas.width();
-    canvasHeight = canvas.height();
+    canvasWidth = canvas.width() || $(window).width();
+    canvasHeight = canvas.height() || $(window).height();
 
     var g = [
       new Point(202, 78, 0.0, 9, "#ed9d33"),
@@ -130,8 +130,8 @@ $(function () {
     let offsetX = canvasWidth / 2 - 180;
     let offsetY = canvasHeight / 2 - 65;
 
-    for (let i = 0; i < pointCollection.points.length; i++) {
-      let point = pointCollection.points[i];
+    for (let point of pointCollection.points) {
+      if (!point.curPosInitialized) continue;
 
       let relX = point.originalPos.x - point.originalCanvasCenterX;
       let relY = point.originalPos.y - point.originalCanvasCenterY;
@@ -233,14 +233,8 @@ $(function () {
         var d = Math.sqrt(dd);
 
         if (d < 150) {
-          point.targetPos.x =
-            this.mousePos.x < point.curPos.x
-              ? point.curPos.x - dx
-              : point.curPos.x - dx;
-          point.targetPos.y =
-            this.mousePos.y < point.curPos.y
-              ? point.curPos.y - dy
-              : point.curPos.y - dy;
+          point.targetPos.x = point.curPos.x - dx;
+          point.targetPos.y = point.curPos.y - dy;
         } else {
           point.targetPos.x = point.originalPos.x;
           point.targetPos.y = point.originalPos.y;
@@ -339,10 +333,17 @@ $(function () {
     }
 
     for (let i = 0; i < points.length; i++) {
-      points[i].curPos.x += canvasWidth / 2 - 200;
-      points[i].curPos.y += canvasHeight / 2 - 100;
+      let offsetX = canvasWidth / 2 - 180;
+      let offsetY = canvasHeight / 2 - 65;
+
+      points[i].curPos.x += offsetX;
+      points[i].curPos.y += offsetY;
       points[i].originalPos.x = points[i].curPos.x;
       points[i].originalPos.y = points[i].curPos.y;
+
+      points[i].curPosInitialized = true;
+      points[i].originalCanvasCenterX = offsetX;
+      points[i].originalCanvasCenterY = offsetY;
     }
 
     return points;
@@ -356,7 +357,6 @@ $(function () {
       pointCollection = new PointCollection();
     }
     pointCollection.points = newPoints;
-    recenterPoints();
     draw();
   });
 
