@@ -256,7 +256,8 @@ $(function () {
     };
   }
 
-  function Point(x, y, z, size, colour) {
+  function Point(x, y, z, size) {
+    this.hue = Math.random() * 360;
     this.curPos = new Vector(x, y, z);
     this.friction = 0.8;
     this.originalPos = new Vector(x, y, z);
@@ -265,9 +266,6 @@ $(function () {
     this.springStrength = 0.1;
     this.targetPos = new Vector(x, y, z);
     this.velocity = new Vector(0.0, 0.0, 0.0);
-
-    this.hue = Math.random() * 360;
-    this.colour = `hsl(${this.hue}, 100%, 50%)`;
 
     this.update = function () {
       var dx = this.targetPos.x - this.curPos.x;
@@ -297,13 +295,12 @@ $(function () {
       this.radius = this.size * this.curPos.z;
       if (this.radius < 1) this.radius = 1;
 
-      this.hue += 1;
-      if (this.hue > 360) this.hue = 0;
-      this.colour = `hsl(${this.hue}, 100%, 50%)`;
+      this.hue += 10;
+      if (this.hue > 360) this.hue -= 360;
     };
 
     this.draw = function () {
-      ctx.fillStyle = this.colour;
+      ctx.fillStyle = `hsl(${this.hue}, 100%, 50%)`;
       ctx.beginPath();
       ctx.arc(this.curPos.x, this.curPos.y, this.radius, 0, Math.PI * 2, true);
       ctx.fill();
