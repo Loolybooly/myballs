@@ -8,7 +8,9 @@ $(function () {
   var pointCollection;
 
   function init() {
-    updateCanvasDimensions();
+    canvas.attr({ height: $(window).height(), width: $(window).width() });
+    canvasWidth = canvas.width();
+    canvasHeight = canvas.height();
 
     var g = [
       new Point(202, 78, 0.0, 9, "#ed9d33"),
@@ -78,17 +80,19 @@ $(function () {
       new Point(232, 93, 0.0, 5, "#4b78f1"),
     ];
 
-    gLength = g.length;
-    for (var i = 0; i < gLength; i++) {
-      g[i].curPos.x = canvasWidth / 2 - 180 + g[i].curPos.x;
-      g[i].curPos.y = canvasHeight / 2 - 65 + g[i].curPos.y;
+    var offsetX = canvasWidth / 2 - 180;
+    var offsetY = canvasHeight / 2 - 65;
 
-      g[i].originalPos.x = canvasWidth / 2 - 180 + g[i].originalPos.x;
-      g[i].originalPos.y = canvasHeight / 2 - 65 + g[i].originalPos.y;
+    for (var i = 0; i < g.length; i++) {
+      g[i].curPos.x += offsetX;
+      g[i].curPos.y += offsetY;
+
+      g[i].originalPos.x += offsetX;
+      g[i].originalPos.y += offsetY;
 
       g[i].curPosInitialized = true;
-      g[i].originalCanvasCenterX = canvasWidth / 2 - 180;
-      g[i].originalCanvasCenterY = canvasHeight / 2 - 65;
+      g[i].originalCanvasCenterX = offsetX;
+      g[i].originalCanvasCenterY = offsetY;
     }
 
     pointCollection = new PointCollection();
@@ -129,17 +133,17 @@ $(function () {
     for (let i = 0; i < pointCollection.points.length; i++) {
       let point = pointCollection.points[i];
 
-      let relX = point.originalPos.x - point.originalCanvasCenterX || 0;
-      let relY = point.originalPos.y - point.originalCanvasCenterY || 0;
+      let relX = point.originalPos.x - point.originalCanvasCenterX;
+      let relY = point.originalPos.y - point.originalCanvasCenterY;
 
       point.originalPos.x = offsetX + relX;
       point.originalPos.y = offsetY + relY;
 
-      if (!point.curPosInitialized) {
-        point.curPos.x = point.originalPos.x;
-        point.curPos.y = point.originalPos.y;
-        point.curPosInitialized = true;
-      }
+      point.curPos.x += offsetX - point.originalCanvasCenterX;
+      point.curPos.y += offsetY - point.originalCanvasCenterY;
+
+      point.originalCanvasCenterX = offsetX;
+      point.originalCanvasCenterY = offsetY;
     }
   }
 
