@@ -85,6 +85,10 @@ $(function () {
 
       g[i].originalPos.x = canvasWidth / 2 - 180 + g[i].originalPos.x;
       g[i].originalPos.y = canvasHeight / 2 - 65 + g[i].originalPos.y;
+
+      g[i].curPosInitialized = true;
+      g[i].originalCanvasCenterX = canvasWidth / 2 - 180;
+      g[i].originalCanvasCenterY = canvasHeight / 2 - 65;
     }
 
     pointCollection = new PointCollection();
@@ -117,7 +121,7 @@ $(function () {
   }
 
   function recenterPoints() {
-    if (!pointCollection) return;
+    if (!pointCollection || pointCollection.points.length === 0) return;
 
     let offsetX = canvasWidth / 2 - 180;
     let offsetY = canvasHeight / 2 - 65;
@@ -125,14 +129,17 @@ $(function () {
     for (let i = 0; i < pointCollection.points.length; i++) {
       let point = pointCollection.points[i];
 
-      let relX = point.originalPos.x - (canvasWidth / 2 - 180);
-      let relY = point.originalPos.y - (canvasHeight / 2 - 65);
+      let relX = point.originalPos.x - point.originalCanvasCenterX || 0;
+      let relY = point.originalPos.y - point.originalCanvasCenterY || 0;
 
       point.originalPos.x = offsetX + relX;
       point.originalPos.y = offsetY + relY;
 
-      point.curPos.x = point.originalPos.x;
-      point.curPos.y = point.originalPos.y;
+      if (!point.curPosInitialized) {
+        point.curPos.x = point.originalPos.x;
+        point.curPos.y = point.originalPos.y;
+        point.curPosInitialized = true;
+      }
     }
   }
 
