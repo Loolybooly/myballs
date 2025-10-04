@@ -256,8 +256,9 @@ $(function () {
     };
   }
 
+  let globalHue = 0;
+
   function Point(x, y, z, size) {
-    this.hue = Math.random() * 360;
     this.curPos = new Vector(x, y, z);
     this.friction = 0.8;
     this.originalPos = new Vector(x, y, z);
@@ -268,43 +269,60 @@ $(function () {
     this.velocity = new Vector(0.0, 0.0, 0.0);
 
     this.update = function () {
-      var dx = this.targetPos.x - this.curPos.x;
-      var ax = dx * this.springStrength;
+      let dx = this.targetPos.x - this.curPos.x;
+      let ax = dx * this.springStrength;
       this.velocity.x += ax;
       this.velocity.x *= this.friction;
       this.curPos.x += this.velocity.x;
 
-      var dy = this.targetPos.y - this.curPos.y;
-      var ay = dy * this.springStrength;
+      let dy = this.targetPos.y - this.curPos.y;
+      let ay = dy * this.springStrength;
       this.velocity.y += ay;
       this.velocity.y *= this.friction;
       this.curPos.y += this.velocity.y;
 
-      var dox = this.originalPos.x - this.curPos.x;
-      var doy = this.originalPos.y - this.curPos.y;
-      var dd = dox * dox + doy * doy;
-      var d = Math.sqrt(dd);
+      let dox = this.originalPos.x - this.curPos.x;
+      let doy = this.originalPos.y - this.curPos.y;
+      let dd = dox * dox + doy * doy;
+      let d = Math.sqrt(dd);
 
       this.targetPos.z = d / 100 + 1;
-      var dz = this.targetPos.z - this.curPos.z;
-      var az = dz * this.springStrength;
+      let dz = this.targetPos.z - this.curPos.z;
+      let az = dz * this.springStrength;
       this.velocity.z += az;
       this.velocity.z *= this.friction;
       this.curPos.z += this.velocity.z;
 
       this.radius = this.size * this.curPos.z;
       if (this.radius < 1) this.radius = 1;
-
-      this.hue += 10;
-      if (this.hue > 360) this.hue -= 360;
     };
 
-    this.draw = function () {
-      ctx.fillStyle = `hsl(${this.hue}, 100%, 50%)`;
+    this.draw = function (index, total) {
+      let waveOffset = (index / total) * 360;
+      let hue = (globalHue + waveOffset) % 360;
+      ctx.fillStyle = `hsl(${hue}, 100%, 50%)`;
       ctx.beginPath();
       ctx.arc(this.curPos.x, this.curPos.y, this.radius, 0, Math.PI * 2, true);
       ctx.fill();
     };
+  }
+
+  function draw() {
+    var tmpCanvas = canvas.get(0);
+    if (!tmpCanvas.getContext) return;
+
+    ctx = tmpCanvas.getContext("2d");
+    ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+
+    if (pointCollection) {
+      let total = pointCollection.points.length;
+      for (let i = 0; i < total; i++) {
+        pointCollection.points[i].draw(i, total);
+      }
+    }
+
+    globalHue += 1;
+    if (globalHue > 360) globalHue -= 360;
   }
 
   function generatePointsFromText(text) {
