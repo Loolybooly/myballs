@@ -297,9 +297,8 @@ $(function () {
       if (this.radius < 1) this.radius = 1;
     };
 
-    this.draw = function (index, total) {
-      let waveOffset = (index / total) * 360;
-      let hue = (globalHue + waveOffset) % 360;
+    this.draw = function () {
+      let hue = (globalHue + (this.curPos.x / canvasWidth) * 360) % 360;
       ctx.fillStyle = `hsl(${hue}, 100%, 50%)`;
       ctx.beginPath();
       ctx.arc(this.curPos.x, this.curPos.y, this.radius, 0, Math.PI * 2, true);
@@ -321,7 +320,7 @@ $(function () {
       }
     }
 
-    globalHue += 1;
+    globalHue += -5;
     if (globalHue > 360) globalHue -= 360;
   }
 
