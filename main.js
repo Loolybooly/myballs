@@ -257,7 +257,6 @@ $(function () {
   }
 
   function Point(x, y, z, size, colour) {
-    this.colour = colour;
     this.curPos = new Vector(x, y, z);
     this.friction = 0.8;
     this.originalPos = new Vector(x, y, z);
@@ -266,6 +265,9 @@ $(function () {
     this.springStrength = 0.1;
     this.targetPos = new Vector(x, y, z);
     this.velocity = new Vector(0.0, 0.0, 0.0);
+
+    this.hue = Math.random() * 360;
+    this.colour = `hsl(${this.hue}, 100%, 50%)`;
 
     this.update = function () {
       var dx = this.targetPos.x - this.curPos.x;
@@ -294,6 +296,10 @@ $(function () {
 
       this.radius = this.size * this.curPos.z;
       if (this.radius < 1) this.radius = 1;
+
+      this.hue += 1;
+      if (this.hue > 360) this.hue = 0;
+      this.colour = `hsl(${this.hue}, 100%, 50%)`;
     };
 
     this.draw = function () {
