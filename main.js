@@ -383,6 +383,7 @@ $(function () {
   $(function () {
     let textFromURL = getQueryParam("t");
     if (textFromURL) {
+      textFromURL = textFromURL.replace(/-/g, " "); // convert hyphens to spaces
       let newPoints = generatePointsFromText(textFromURL);
       if (!pointCollection) pointCollection = new PointCollection();
       pointCollection.points = newPoints;
