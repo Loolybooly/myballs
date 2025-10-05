@@ -387,47 +387,24 @@ $(function () {
     draw();
   }
 
-  let textFromURL = getQueryParam("t");
-  let base64FromURL = getQueryParam("b");
-
-  if (base64FromURL) {
-    try {
-      textFromURL = atob(base64FromURL);
-    } catch (e) {
-      console.error("Invalid Base64 in URL");
-    }
-  }
+  const textFromURL = getQueryParam("t");
 
   if (textFromURL) {
-    textFromURL = textFromURL.replace(/-/g, " ");
-    let newPoints = generatePointsFromText(textFromURL);
-    if (!pointCollection) pointCollection = new PointCollection();
-    pointCollection.points = newPoints;
-    draw();
+    const decoded = textFromURL.replace(/-/g, " ");
+    updatePointsFromText(decoded);
   }
 
   $("#applyText").on("click", function () {
-    let text = $("#wordInput").val().trim();
+    const text = $("#wordInput").val().trim();
     if (!text) return alert("Please type a word!");
-    let newPoints = generatePointsFromText(text);
+    const newPoints = generatePointsFromText(text);
     if (!pointCollection) pointCollection = new PointCollection();
     pointCollection.points = newPoints;
     draw();
-  });
-
-  $("#copyBase64").on("click", function () {
-    let text = $("#wordInput").val().trim();
-    if (!text) return alert("Type something first!");
-    let encoded = btoa(text);
-    let url = `${window.location.origin}${window.location.pathname}?b=${encoded}`;
-    navigator.clipboard.writeText(url).then(() => {
-      alert("URL copied to clipboard!");
-    });
   });
 
   init();
   $("#reload-msg").fadeIn(300);
-
   setTimeout(function () {
     $("#reload-msg").fadeOut(300);
   }, 3000);

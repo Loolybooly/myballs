@@ -86,7 +86,3 @@ section {
     position: absolute;
     right: 40px;
 }
-
-#copyBase64 {
-    cursor: pointer;
-}
