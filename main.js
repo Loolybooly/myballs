@@ -387,16 +387,6 @@ $(function () {
     draw();
   }
 
-  let textFromURL = getQueryParam("t");
-
-  if (textFromURL) {
-    textFromURL = textFromURL.replace(/-/g, " ");
-    let newPoints = generatePointsFromText(textFromURL);
-    if (!pointCollection) pointCollection = new PointCollection();
-    pointCollection.points = newPoints;
-    draw();
-  }
-
   $("#applyText").on("click", function () {
     let text = $("#wordInput").val().trim();
     if (!text) return alert("Please type a word!");
@@ -407,6 +397,17 @@ $(function () {
   });
 
   init();
+
+  let textFromURL = getQueryParam("t");
+
+  if (textFromURL) {
+    textFromURL = textFromURL.replace(/-/g, " ");
+    let newPoints = generatePointsFromText(textFromURL);
+    if (!pointCollection) pointCollection = new PointCollection();
+    pointCollection.points = newPoints;
+    draw();
+  }
+
   $("#reload-msg").fadeIn(300);
 
   setTimeout(function () {
