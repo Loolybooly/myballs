@@ -327,12 +327,17 @@ $(function () {
   function generatePointsFromText(text) {
     let offCanvas = document.createElement("canvas");
     let offCtx = offCanvas.getContext("2d");
-    offCanvas.width = 800;
+    offCanvas.width = 2000;
     offCanvas.height = 200;
 
     offCtx.fillStyle = "#ffffff";
     offCtx.font = "bold 120px Arial";
-    offCtx.fillText(text, 20, 120);
+
+    let middleIndex = Math.floor(text.length / 2);
+    let preText = text.slice(0, middleIndex);
+    let preWidth = offCtx.measureText(preText).width;
+
+    offCtx.fillText(text, 0, 120);
 
     let imageData = offCtx.getImageData(
       0,
@@ -346,21 +351,19 @@ $(function () {
       for (let x = 0; x < imageData.width; x += 6) {
         let i = (y * imageData.width + x) * 4;
         if (imageData.data[i + 3] > 128) {
-          let colour = "#555555";
-          points.push(new Point(x, y, 0.0, 3, colour));
+          points.push(new Point(x, y, 0.0, 3, "#555555"));
         }
       }
     }
 
-    for (let i = 0; i < points.length; i++) {
-      let offsetX = canvasWidth / 2 - 180;
-      let offsetY = canvasHeight / 2 - 65;
+    let offsetX = canvasWidth / 2 - preWidth;
+    let offsetY = canvasHeight / 2 - 65;
 
+    for (let i = 0; i < points.length; i++) {
       points[i].curPos.x += offsetX;
       points[i].curPos.y += offsetY;
       points[i].originalPos.x = points[i].curPos.x;
       points[i].originalPos.y = points[i].curPos.y;
-
       points[i].curPosInitialized = true;
       points[i].originalCanvasCenterX = offsetX;
       points[i].originalCanvasCenterY = offsetY;
