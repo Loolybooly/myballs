@@ -409,7 +409,10 @@ $(function () {
   $("#applyText").on("click", function () {
     let text = $("#wordInput").val().trim();
     if (!text) return alert("Please type a word!");
-    updatePointsFromText(text);
+    let newPoints = generatePointsFromText(text);
+    if (!pointCollection) pointCollection = new PointCollection();
+    pointCollection.points = newPoints;
+    draw();
   });
 
   $("#copyBase64").on("click", function () {
