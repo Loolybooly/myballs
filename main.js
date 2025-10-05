@@ -375,15 +375,28 @@ $(function () {
     return points;
   }
 
-  $("#applyText").on("click", function () {
-    let text = $("#wordInput").val().trim();
-    if (!text) return alert("Please type a word!");
-    let newPoints = generatePointsFromText(text);
-    if (!pointCollection) {
-      pointCollection = new PointCollection();
+  function getQueryParam(name) {
+    let params = new URLSearchParams(window.location.search);
+    return params.get(name);
+  }
+
+  $(function () {
+    let textFromURL = getQueryParam("t");
+    if (textFromURL) {
+      let newPoints = generatePointsFromText(textFromURL);
+      if (!pointCollection) pointCollection = new PointCollection();
+      pointCollection.points = newPoints;
+      draw();
     }
-    pointCollection.points = newPoints;
-    draw();
+
+    $("#applyText").on("click", function () {
+      let text = $("#wordInput").val().trim();
+      if (!text) return alert("Please type a word!");
+      let newPoints = generatePointsFromText(text);
+      if (!pointCollection) pointCollection = new PointCollection();
+      pointCollection.points = newPoints;
+      draw();
+    });
   });
 
   init();
