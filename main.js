@@ -380,23 +380,48 @@ $(function () {
     return params.get(name);
   }
 
-  $(function () {
-    let textFromURL = getQueryParam("t");
-    if (textFromURL) {
-      textFromURL = textFromURL.replace(/-/g, " "); // convert hyphens to spaces
-      let newPoints = generatePointsFromText(textFromURL);
-      if (!pointCollection) pointCollection = new PointCollection();
-      pointCollection.points = newPoints;
-      draw();
-    }
+  function updatePointsFromText(text) {
+    let newPoints = generatePointsFromText(text);
+    if (!pointCollection) pointCollection = new PointCollection();
+    pointCollection.points = newPoints;
+    draw();
+  }
 
-    $("#applyText").on("click", function () {
-      let text = $("#wordInput").val().trim();
-      if (!text) return alert("Please type a word!");
-      let newPoints = generatePointsFromText(text);
-      if (!pointCollection) pointCollection = new PointCollection();
-      pointCollection.points = newPoints;
-      draw();
+  let textFromURL = getQueryParam("t");
+  let base64FromURL = getQueryParam("b");
+
+  if (base64FromURL) {
+    try {
+      textFromURL = atob(base64FromURL);
+    } catch (e) {
+      console.error("Invalid Base64 in URL");
+    }
+  }
+
+  if (textFromURL) {
+    textFromURL = textFromURL.replace(/-/g, " ");
+    let newPoints = generatePointsFromText(textFromURL);
+    if (!pointCollection) pointCollection = new PointCollection();
+    pointCollection.points = newPoints;
+    draw();
+  }
+
+  $("#applyText").on("click", function () {
+    let text = $("#wordInput").val().trim();
+    if (!text) return alert("Please type a word!");
+    let newPoints = generatePointsFromText(text);
+    if (!pointCollection) pointCollection = new PointCollection();
+    pointCollection.points = newPoints;
+    draw();
+  });
+
+  $("#copyBase64").on("click", function () {
+    let text = $("#wordInput").val().trim();
+    if (!text) return alert("Type something first!");
+    let encoded = btoa(text);
+    let url = `${window.location.origin}${window.location.pathname}?b=${encoded}`;
+    navigator.clipboard.writeText(url).then(() => {
+      alert("URL copied to clipboard!");
     });
   });
 
