@@ -327,12 +327,17 @@ $(function () {
   function generatePointsFromText(text) {
     let offCanvas = document.createElement("canvas");
     let offCtx = offCanvas.getContext("2d");
-    offCanvas.width = 2000;
-    offCanvas.height = 200;
 
+    let fontSize = 120;
+    offCtx.font = `bold ${fontSize}px Arial`;
+
+    let textWidth = offCtx.measureText(text).width;
+    offCanvas.width = Math.ceil(textWidth) + 50;
+    offCanvas.height = 200;
+    offCtx.font = `bold ${fontSize}px Arial`;
     offCtx.fillStyle = "#ffffff";
-    offCtx.font = "bold 120px Arial";
-    offCtx.fillText(text, 0, 120);
+
+    offCtx.fillText(text, 0, fontSize);
 
     let imageData = offCtx.getImageData(
       0,
@@ -351,9 +356,7 @@ $(function () {
       }
     }
 
-    let textWidth = offCtx.measureText(text).width;
     let scale = Math.min(1, (canvasWidth * 0.9) / textWidth);
-
     let offsetX = canvasWidth / 2 - (textWidth / 2) * scale;
     let offsetY = canvasHeight / 2 - 60;
 
