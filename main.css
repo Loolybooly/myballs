@@ -60,12 +60,31 @@ section {
     color: #fff;
     width: 250px;
     z-index: 10;
-    box-shadow: 0 0 15px rgb(255, 255, 255);
     transition: box-shadow 0.3s ease;
 }
 
 #wordInput:focus {
-    box-shadow: none;
+    box-shadow: 0 0 15px rgb(255, 255, 255);
+}
+
+#hueInput {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    padding: 10px 15px;
+    font-size: 18px;
+    border: 2px solid rgba(255, 255, 255, 0.087);
+    border-radius: 8px;
+    outline: none;
+    background-color: rgba(255, 255, 255, 0.2);
+    color: #fff;
+    width: 250px;
+    z-index: 10;
+    transition: box-shadow 0.3s ease;
+}
+
+#hueInput:focus {
+    box-shadow: 0 0 15px rgb(255, 255, 255);
 }
 
 #attribution {

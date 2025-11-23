@@ -4,6 +4,7 @@ $(function () {
   var canvasWidth;
   var ctx;
   var dt = 0.1;
+  var hueIncrement = -5;
 
     var pointCollection;
 
@@ -237,8 +238,9 @@ $(function () {
       }
     }
 
-    globalHue += -5;
+    globalHue += hueIncrement;
     if (globalHue > 360) globalHue -= 360;
+    if (globalHue < 0) globalHue += 360;
   }
 
   function generatePointsFromText(text) {
@@ -313,9 +315,24 @@ $(function () {
     draw();
   }
 
+  function applyHue() {
+    let hueValue = parseInt($("#hueInput").val().trim());
+    if (isNaN(hueValue)) return alert("Please enter a number!");
+    if (hueValue < -1000) hueValue = -1000;
+    if (hueValue > 1000) hueValue = 1000;
+    hueIncrement = hueValue;
+    $("#hueInput").val(hueValue);
+  }
+
   $("#wordInput").on("keyup", function (e) {
     if (e.key === "Enter") {
       applyText();
+    }
+  });
+
+  $("#hueInput").on("keyup", function (e) {
+    if (e.key === "Enter") {
+      applyHue();
     }
   });
 
@@ -331,9 +348,4 @@ $(function () {
     draw();
   }
 
-  $("#reload-msg").fadeIn(300);
-
-  setTimeout(function () {
-    $("#reload-msg").fadeOut(300);
-  }, 3000);
 });
